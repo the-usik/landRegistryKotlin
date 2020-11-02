@@ -1,4 +1,4 @@
 import tornadofx.*
-import views.MainView
+import views.AuthView
 
-class MainApplication : App(MainView::class)
+class MainApplication : App(AuthView::class)
