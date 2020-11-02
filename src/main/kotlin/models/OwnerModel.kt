@@ -39,8 +39,6 @@ class Owner(document: Document) : DatabaseModel {
         updateModel(document)
     }
 
-    constructor()
-
     override fun updateModel(document: Document) {
         with(document) {
             id = getObjectId("_id")

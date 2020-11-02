@@ -33,11 +33,10 @@ class Land(document: Document) : DatabaseModel {
     val surveyProperty = SimpleBooleanProperty()
     var survey by surveyProperty
 
+
     init {
         updateModel(document)
     }
-
-    constructor()
 
     override fun updateModel(document: Document) {
         with(document) {
