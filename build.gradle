@@ -17,6 +17,7 @@ javafx {
 }
 
 dependencies {
+    compile 'org.mongodb:mongodb-driver-legacy:4.0.5'
     implementation 'no.tornado:tornadofx:1.7.20'
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     testCompile group: 'junit', name: 'junit', version: '4.12'
