@@ -23,7 +23,6 @@ class User(document: Document) : DatabaseModel {
         updateModel(document)
     }
 
-
     override fun updateModel(document: Document) {
         with(document) {
             id = getObjectId("_id")

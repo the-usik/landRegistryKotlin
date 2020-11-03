@@ -1,11 +1,15 @@
 package views
 
 import database.Database
+import javafx.scene.control.Label
+import javafx.util.Duration
 import models.UserModel
 import tornadofx.*
 
 class AuthView : View("Authorization") {
-    val userModel: UserModel by inject()
+    private val userModel: UserModel by inject()
+
+    private val messageLabelId by cssid()
 
     override val root = form {
         fieldset("Authorization") {
@@ -20,14 +24,34 @@ class AuthView : View("Authorization") {
                     } ui { response -> handleAuthResponse(response) }
                 }
             }
+
+            label {
+                setId(messageLabelId)
+                isVisible = false
+            }
         }
     }
 
     private fun handleAuthResponse(response: Boolean) {
-        if (response) {
-            // success auth
-        } else {
-            // error auth
+        if (!response) {
+            showInlineMessage("Authorization Failed: Incorrect login or password", 2.5.seconds)
+            return
         }
+
+        showInlineMessage(
+            message = "Success authorization!",
+            delay = 1.seconds
+        )
+        runLater(1.seconds) {
+            replaceWith(MainView::class)
+        }
+    }
+
+    private fun showInlineMessage(message: String, delay: Duration) {
+        val labelNode = root.select<Label>(messageLabelId)
+        labelNode.text = message
+        labelNode.show()
+
+        runLater(delay) { labelNode.hide() }
     }
 }
