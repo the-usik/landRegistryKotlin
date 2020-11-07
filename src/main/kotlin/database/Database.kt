@@ -2,11 +2,10 @@ package database
 
 import com.mongodb.MongoClient
 import com.mongodb.client.FindIterable
+import com.mongodb.client.result.InsertOneResult
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import models.DatabaseModel
-import models.User
-import models.UserModel
+import models.*
 import org.bson.Document
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -35,6 +34,11 @@ object Database {
         return usersCollection.find().asObservableModel(User::class)
     }
 
+    fun loadCategories(): ObservableList<CategoryModel> {
+        val categoriesCollection = database.getCollection(CATEGORIES_COLLECTION)
+        return categoriesCollection.find().asObservableModel(CategoryModel::class)
+    }
+
     fun tryAuthUser(user: UserModel): Boolean {
         val usersCollection = database.getCollection(USERS_COLLECTION)
         val document = Document()
@@ -42,6 +46,20 @@ object Database {
         document.append("password", user.password.value)
         val findResult = usersCollection.find(document)
         return findResult.count() > 0
+    }
+
+    fun insertLandOwner(landOwner: Owner): InsertOneResult {
+        val ownerCollection = database.getCollection(OWNERS_COLLECTION)
+        val ownerDocument = landOwner.toDocument()
+
+        return ownerCollection.insertOne(ownerDocument)
+    }
+
+    fun insertLand(land: Land): InsertOneResult {
+        val landsCollection = database.getCollection(LANDS_COLLECTION)
+        val landDocument = land.toDocument()
+
+        return landsCollection.insertOne(landDocument)
     }
 
     private fun <T : DatabaseModel> FindIterable<Document>.asObservableModel(modelClass: KClass<T>): ObservableList<T> {

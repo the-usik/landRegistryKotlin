@@ -2,7 +2,10 @@ package views
 
 import javafx.scene.layout.AnchorPane
 import tornadofx.*
-import views.pages.*
+import views.pages.AboutView
+import views.pages.AddFormView
+import views.pages.GeneralView
+import views.pages.SettingsView
 
 class MainView : View("Main page") {
     private val mainContainer by cssid()
@@ -14,6 +17,12 @@ class MainView : View("Main page") {
             setId(mainContainer)
         }
     }
+
+    init {
+        currentWindow?.width = 720.0
+        currentWindow?.height = 480.0
+    }
+
 
     private fun createListMenu() = listmenu {
         item(text = "general") {

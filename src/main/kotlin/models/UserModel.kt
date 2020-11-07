@@ -9,7 +9,7 @@ import tornadofx.ItemViewModel
 import tornadofx.getValue
 import tornadofx.setValue
 
-class User(document: Document) : DatabaseModel {
+class User() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
     var id by idProperty
 
@@ -19,8 +19,16 @@ class User(document: Document) : DatabaseModel {
     val passwordProperty = SimpleStringProperty()
     var password by passwordProperty
 
-    init {
+    constructor(document: Document) : this() {
         updateModel(document)
+    }
+
+    override fun toDocument(): Document {
+        val document = Document()
+        document.append("login", login)
+        document.append("password", password)
+
+        return document
     }
 
     override fun updateModel(document: Document) {

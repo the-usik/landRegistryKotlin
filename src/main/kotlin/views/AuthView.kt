@@ -15,19 +15,20 @@ class AuthView : View("Authorization") {
         fieldset("Authorization") {
             field("Login: ") { textfield(userModel.login).required() }
             field("Password: ") { passwordfield(userModel.password).required() }
-            button("auth") {
-                enableWhen(userModel.valid)
-                useMaxWidth = true
-                action {
-                    runAsync {
-                        Database.tryAuthUser(userModel)
-                    } ui { response -> handleAuthResponse(response) }
-                }
-            }
 
             label {
                 setId(messageLabelId)
                 isVisible = false
+            }
+        }
+
+        button("auth") {
+            enableWhen(userModel.valid)
+            useMaxWidth = true
+            action {
+                runAsync {
+                    Database.tryAuthUser(userModel)
+                } ui { response -> handleAuthResponse(response) }
             }
         }
     }

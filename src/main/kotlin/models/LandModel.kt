@@ -11,7 +11,7 @@ import tornadofx.ItemViewModel
 import tornadofx.getValue
 import tornadofx.setValue
 
-class Land(document: Document) : DatabaseModel {
+class Land() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
     var id by idProperty
 
@@ -33,10 +33,23 @@ class Land(document: Document) : DatabaseModel {
     val surveyProperty = SimpleBooleanProperty()
     var survey by surveyProperty
 
-
-    init {
+    constructor(document: Document) : this() {
         updateModel(document)
     }
+
+    override fun toDocument(): Document {
+        val document = Document()
+
+        document.append("ownerId", ownerId)
+        document.append("categoryId", categoryId)
+        document.append("address", address)
+        document.append("price", price)
+        document.append("totalArea", totalArea)
+        document.append("survey", survey)
+
+        return document
+    }
+
 
     override fun updateModel(document: Document) {
         with(document) {
