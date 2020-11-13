@@ -39,7 +39,7 @@ class User() : DatabaseModel {
     }
 }
 
-class UserModel : ItemViewModel<User>() {
+class UserModel : ItemViewModel<User>(User()) {
     var id = bind(User::idProperty)
     var login = bind(User::loginProperty)
     var password = bind(User::passwordProperty)
