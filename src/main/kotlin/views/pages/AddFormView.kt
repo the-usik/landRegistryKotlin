@@ -1,7 +1,6 @@
 package views.pages
 
 import controllers.AddController
-import database.Database
 import javafx.geometry.Pos
 import javafx.scene.layout.HBox
 import scopes.AddScope

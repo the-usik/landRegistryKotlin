@@ -1,15 +1,11 @@
 package controllers
 
 import database.Database
-import javafx.beans.property.SimpleObjectProperty
 import models.Land
 import models.LandModel
 import models.Owner
 import models.OwnerModel
-import org.bson.BsonValue
-import org.bson.types.ObjectId
 import tornadofx.Controller
-import tornadofx.cleanBind
 
 class AddController : Controller() {
     val categories = Database.loadCategories()
