@@ -8,7 +8,6 @@ import tornadofx.*
 
 class AuthView : View("Authorization") {
     private val userModel: UserModel by inject()
-
     private val messageLabelId by cssid()
 
     override val root = form {
@@ -27,7 +26,7 @@ class AuthView : View("Authorization") {
             useMaxWidth = true
             action {
                 runAsync {
-                    Database.tryAuthUser(userModel)
+                    Database.tryAuthUser(userModel.item!!)
                 } ui { response -> handleAuthResponse(response) }
             }
         }
