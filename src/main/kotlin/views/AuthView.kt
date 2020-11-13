@@ -24,12 +24,19 @@ class AuthView : View("Authorization") {
         button("auth") {
             enableWhen(userModel.valid)
             useMaxWidth = true
-            action {
-                runAsync {
-                    Database.tryAuthUser(userModel.item!!)
-                } ui { response -> handleAuthResponse(response) }
-            }
+            action { authUser() }
         }
+    }
+
+    private fun authUser() {
+        if (userModel.commit()) {
+            runAsync {
+                Database.tryAuthUser(userModel.item)
+            } ui { response -> handleAuthResponse(response) }
+        } else showInlineMessage(
+            message = "Failure on commit",
+            delay = 2.5.seconds
+        )
     }
 
     private fun handleAuthResponse(response: Boolean) {
