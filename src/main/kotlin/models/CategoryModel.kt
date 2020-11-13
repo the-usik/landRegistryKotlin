@@ -4,17 +4,17 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import org.bson.Document
 import org.bson.types.ObjectId
+import tornadofx.ItemViewModel
 import tornadofx.getValue
 import tornadofx.setValue
 
-class CategoryModel : DatabaseModel {
+class Category : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
-    var id by idProperty
-
     val nameProperty = SimpleStringProperty()
-    var name by nameProperty
-
     val descriptionProperty = SimpleStringProperty()
+
+    var id by idProperty
+    var name by nameProperty
     var description by descriptionProperty
 
     override fun toDocument(): Document {
@@ -31,6 +31,16 @@ class CategoryModel : DatabaseModel {
             name = getString("name")
             description = getString("description")
         }
+    }
+}
+
+class CategoryModel : ItemViewModel<Category>() {
+    var id = bind(Category::idProperty)
+    var name = bind(Category::nameProperty)
+    var description = bind(Category::descriptionProperty)
+
+    init {
+        item = Category()
     }
 }
 

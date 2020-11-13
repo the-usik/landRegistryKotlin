@@ -1,5 +1,10 @@
 import styles.MainStyles
 import tornadofx.App
-import views.AuthView
+import tornadofx.launch
+import views.MainView
 
-class MainApplication : App(AuthView::class, MainStyles::class)
+class MainApplication : App(MainView::class, MainStyles::class)
+
+fun main() {
+    launch<MainApplication>()
+}

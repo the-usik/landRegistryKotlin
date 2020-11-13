@@ -18,8 +18,8 @@ object Database {
     // collection names
     private const val USERS_COLLECTION = "users"
     private const val LANDS_COLLECTION = "lands"
-    private const val OWNERS_COLLECTION = "land_owners"
-    private const val CATEGORIES_COLLECTION = "categories"
+    private const val OWNERS_COLLECTION = "owners"
+    private const val CATEGORIES_COLLECTION = "land_category"
 
     // connecting to database
     private val client = MongoClient(DB_HOST)
@@ -34,9 +34,9 @@ object Database {
         return usersCollection.find().asObservableModel(User::class)
     }
 
-    fun loadCategories(): ObservableList<CategoryModel> {
+    fun loadCategories(): ObservableList<Category> {
         val categoriesCollection = database.getCollection(CATEGORIES_COLLECTION)
-        return categoriesCollection.find().asObservableModel(CategoryModel::class)
+        return categoriesCollection.find().asObservableModel(Category::class)
     }
 
     fun tryAuthUser(user: UserModel): Boolean {

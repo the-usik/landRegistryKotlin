@@ -35,7 +35,7 @@ class Owner() : DatabaseModel {
     val birthdayProperty = SimpleObjectProperty<LocalDate>()
     var birthday by birthdayProperty
 
-    constructor(document: Document): this() {
+    constructor(document: Document) : this() {
         updateModel(document)
     }
 
@@ -62,7 +62,7 @@ class Owner() : DatabaseModel {
             fullName = getString("fullName")
             phone = getString("phone")
             email = getString("email")
-            birthday = LocalDate.now()
+            birthday = LocalDate.ofEpochDay(getDate("birthday").time)
         }
     }
 }

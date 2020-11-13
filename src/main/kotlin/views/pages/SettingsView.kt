@@ -1,6 +1,7 @@
 package views.pages
 
-import tornadofx.*
+import tornadofx.View
+import tornadofx.form
 
 class SettingsView : View() {
     override val root = form {}

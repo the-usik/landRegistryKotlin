@@ -1,6 +1,7 @@
 package views.pages
 
-import tornadofx.*
+import tornadofx.View
+import tornadofx.label
 
 class GeneralView : View() {
     override val root = label("sperma2")

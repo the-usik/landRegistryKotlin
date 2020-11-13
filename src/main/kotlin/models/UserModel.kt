@@ -11,12 +11,11 @@ import tornadofx.setValue
 
 class User() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
-    var id by idProperty
-
     val loginProperty = SimpleStringProperty()
-    var login by loginProperty
-
     val passwordProperty = SimpleStringProperty()
+
+    var id by idProperty
+    var login by loginProperty
     var password by passwordProperty
 
     constructor(document: Document) : this() {

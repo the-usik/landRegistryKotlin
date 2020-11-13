@@ -1,67 +1,109 @@
 package views.pages
 
-import javafx.collections.FXCollections
+import controllers.AddController
+import database.Database
+import javafx.geometry.Pos
+import javafx.scene.layout.HBox
 import scopes.AddScope
 import tornadofx.*
+import utils.emailValidator
+import utils.nameValidator
+import utils.phoneValidator
+import java.time.LocalDate
 
 class AddFormView : View() {
     override val scope = AddScope()
-    private val landOwnerModel = scope.ownerModel
-    private val landModel = scope.landModel
+
+    private val controller: AddController by inject(scope)
+    private val landModel = controller.landModel
+    private val ownerModel = controller.ownerModel
 
     override val root = form {
         hbox(spacing = 20) {
-            fieldset(text = "New owner") {
-                field("First name: ") { textfield(landOwnerModel.firstName).required() }
-                field("Middle name: ") { textfield(landOwnerModel.middleName) }
-                field("Last name: ") { textfield(landOwnerModel.lastName) }
-                field("Full name: ") { textfield(landOwnerModel.fullName).isDisable = true }
-                field("Phone: ") { textfield(landOwnerModel.phone) }
-                field("Email: ") {
-                    textfield(landOwnerModel.email)
-                }
-                field("Birthday: ") {
-                    datepicker(landOwnerModel.birthday)
-                }
-            }
-
-            fieldset(text = "New land") {
-                field("Category: ") {
-                    combobox(
-                        property = landModel.categoryId,
-                        values = FXCollections.observableArrayList()
-                    ).required()
-                }
-                field("Address: ") { textfield(landModel.address).required() }
-                field("Price: ") { textfield(landModel.price).required() }
-                field("Total Area: ") { textfield(landModel.totalArea).required() }
-                field("survey: ") {
-                    togglebutton(selectFirst = false) {
-                        val selectedText = selectedProperty().stringBinding {
-                            if (isSelected) "completed" else "not completed"
-                        }
-                        textProperty()?.bind(selectedText)
-                    }
-                }
-            }
+            createAddOwnerForm()
+            createAddLandForm()
         }
 
-        button("add") {
-            //enableWhen(landOwnerModel.valid)
-            minWidth = 200.0
+        hbox(spacing = 20) {
+            alignment = Pos.CENTER
+            button("add") {
+                isDefaultButton = true
+                minWidth = 200.0
 
-            action {
-                processAddOwnerAsync()
+                enableWhen(ownerModel.valid.and(landModel.valid))
+                action {
+                    runAsync {
+                        controller.submitForm()
+                    } success {
+                        println("good")
+                    } fail {
+                        println("fail")
+                    } finally { controller.clearForm() }
+                }
+            }
+
+            button("auto-fill") {
+                minWidth = 200.0
+
+                action {
+                    val owner = ownerModel.item!!
+                    owner.firstName = "Jack"
+                    owner.middleName = "Immanuil"
+                    owner.lastName = "Fresco"
+                    owner.phone = "+79788634742"
+                    owner.email = "me@usik.fresco"
+                    owner.birthday = LocalDate.now()
+                }
             }
         }
     }
 
-    private fun processAddOwnerAsync() {
-        landOwnerModel.commit()
-        val owner = landOwnerModel.item
-        println(owner.firstName)
-        println(owner.lastName)
-        println(owner.phone)
-//        runAsync { Database.insertLandOwner(landOwnerModel.item!!) } ui { response -> println(response.insertedId) }
+    private fun HBox.createAddOwnerForm() = fieldset(text = "New owner") {
+        field("First name: ") {
+            textfield(ownerModel.firstName).nameValidator()
+        }
+        field("Middle name: ") {
+            textfield(ownerModel.middleName).nameValidator()
+        }
+        field("Last name: ") {
+            textfield(ownerModel.lastName).nameValidator()
+        }
+        field("Full name: ") {
+            textfield(ownerModel.fullName).isDisable = true
+        }
+        field("Phone: ") {
+            textfield(ownerModel.phone).phoneValidator()
+        }
+        field("Email: ") {
+            textfield(ownerModel.email).emailValidator()
+        }
+        field("Birthday: ") {
+            datepicker(ownerModel.birthday).required()
+        }
+    }
+
+    private fun HBox.createAddLandForm() = fieldset(text = "New land") {
+        field("Category: ") {
+            combobox(values = controller.categories) {
+                cellFormat { text = it.name }
+                selectionModel.selectFirst()
+                selectionModel.selectedItemProperty().onChange {
+                    landModel.categoryId.value = it?.id
+                }
+            }
+        }
+        field("Address: ") { textfield(landModel.address).required() }
+        field("Price: ") { textfield(landModel.price).required() }
+        field("Total Area: ") { textfield(landModel.totalArea).required() }
+        field("Survey: ") {
+            togglebutton(selectFirst = false) {
+                textProperty().bind(
+                    selectedProperty().stringBinding {
+                        if (isSelected) "completed" else "not completed"
+                    }
+                )
+                selectedProperty().bindBidirectional(landModel.survey)
+            }
+        }
     }
 }

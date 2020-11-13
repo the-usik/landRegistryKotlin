@@ -13,24 +13,19 @@ import tornadofx.setValue
 
 class Land() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
-    var id by idProperty
-
-    val ownerIdProperty = SimpleObjectProperty<ObjectId>()
-    var ownerId by ownerIdProperty
-
     val categoryIdProperty = SimpleObjectProperty<ObjectId>()
-    var categoryId by categoryIdProperty
-
+    val ownerIdProperty = SimpleObjectProperty<ObjectId>()
     val addressProperty = SimpleStringProperty()
-    var address by addressProperty
-
     val priceProperty = SimpleDoubleProperty()
-    var price by priceProperty
-
     val totalAreaProperty = SimpleDoubleProperty()
-    var totalArea by totalAreaProperty
-
     val surveyProperty = SimpleBooleanProperty()
+
+    var id by idProperty
+    var ownerId by ownerIdProperty
+    var categoryId by categoryIdProperty
+    var address by addressProperty
+    var price by priceProperty
+    var totalArea by totalAreaProperty
     var survey by surveyProperty
 
     constructor(document: Document) : this() {
