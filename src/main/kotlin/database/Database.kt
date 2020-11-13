@@ -39,13 +39,12 @@ object Database {
         return categoriesCollection.find().asObservableModel(Category::class)
     }
 
-    fun tryAuthUser(user: UserModel): Boolean {
+    fun tryAuthUser(user: User): Boolean {
         val usersCollection = database.getCollection(USERS_COLLECTION)
         val document = Document()
-        document.append("login", user.login.value)
-        document.append("password", user.password.value)
-        val findResult = usersCollection.find(document)
-        return findResult.count() > 0
+        document.append("login", user.login)
+        document.append("password", user.password)
+        return usersCollection.find(document).count() > 0
     }
 
     fun insertLandOwner(landOwner: Owner): InsertOneResult {
