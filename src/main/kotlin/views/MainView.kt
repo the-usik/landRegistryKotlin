@@ -23,6 +23,9 @@ class MainView : View("Main page") {
         currentWindow?.height = 480.0
     }
 
+    override fun onDock() {
+        switchPage<GeneralView>()
+    }
 
     private fun createListMenu() = listmenu {
         item(text = "general") {

@@ -2,8 +2,9 @@ import styles.MainStyles
 import tornadofx.App
 import tornadofx.launch
 import views.AuthView
+import views.MainView
 
-class MainApplication : App(AuthView::class, MainStyles::class)
+class MainApplication : App(MainView::class, MainStyles::class)
 
 fun main() {
     launch<MainApplication>()

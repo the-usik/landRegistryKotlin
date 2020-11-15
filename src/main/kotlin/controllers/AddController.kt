@@ -8,7 +8,7 @@ import models.OwnerModel
 import tornadofx.Controller
 
 class AddController : Controller() {
-    val categories = Database.loadCategories()
+    val categories = Database.getCategory()
     val landModel = LandModel()
     val ownerModel = OwnerModel()
 
@@ -18,7 +18,7 @@ class AddController : Controller() {
 
     fun submitForm() {
         if (ownerModel.commit()) {
-            Database.insertLandOwner(ownerModel.item).run {
+            Database.insertOwner(ownerModel.item).run {
                 landModel.item.ownerId = insertedId?.asObjectId()?.value
             }
         }

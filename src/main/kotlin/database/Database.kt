@@ -29,12 +29,17 @@ object Database {
 
     fun close() = client.close()
 
-    fun loadUsers(): ObservableList<User> {
+    fun getUsers(): ObservableList<User> {
         val usersCollection = database.getCollection(USERS_COLLECTION)
         return usersCollection.find().asObservableModel(User::class)
     }
 
-    fun loadCategories(): ObservableList<Category> {
+    fun getLands(): ObservableList<Land> {
+        val landsCollection = database.getCollection(LANDS_COLLECTION)
+        return landsCollection.find().asObservableModel(Land::class)
+    }
+
+    fun getCategory(): ObservableList<Category> {
         val categoriesCollection = database.getCollection(CATEGORIES_COLLECTION)
         return categoriesCollection.find().asObservableModel(Category::class)
     }
@@ -47,7 +52,7 @@ object Database {
         return usersCollection.find(document).count() > 0
     }
 
-    fun insertLandOwner(landOwner: Owner): InsertOneResult {
+    fun insertOwner(landOwner: Owner): InsertOneResult {
         val ownerCollection = database.getCollection(OWNERS_COLLECTION)
         val ownerDocument = landOwner.toDocument()
 

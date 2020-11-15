@@ -1,8 +1,41 @@
 package views.pages
 
-import tornadofx.View
-import tornadofx.label
+import database.Database
+import javafx.geometry.Orientation
+import javafx.geometry.Pos
+import javafx.scene.layout.VBox
+import models.Land
+import tornadofx.*
 
 class GeneralView : View() {
-    override val root = label("sperma2")
+    private val lands = Database.getLands()
+
+    override val root = vbox {
+        listmenu(orientation = Orientation.HORIZONTAL) {
+            alignment = Pos.CENTER
+            item("list")
+            item("table")
+        }
+
+        vbox {
+            for (land in lands) {
+                landBlock(land)
+            }
+        }
+    }
+
+    private fun VBox.landBlock(land: Land) = hbox {
+        vbox {
+            field("") {  }
+        }
+
+        vbox {
+            alignment = Pos.CENTER
+            button("edit")
+            button("remove")
+        }
+        // land info
+        // owner info
+        // buttons: edit, remove
+    }
 }
