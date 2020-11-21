@@ -9,6 +9,7 @@ import tornadofx.getValue
 import tornadofx.onChange
 import tornadofx.setValue
 import java.time.LocalDate
+import java.util.*
 
 class Owner() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
@@ -62,7 +63,7 @@ class Owner() : DatabaseModel {
             fullName = getString("fullName")
             phone = getString("phone")
             email = getString("email")
-            birthday = LocalDate.ofEpochDay(getDate("birthday").time)
+            birthday = LocalDate.now()
         }
     }
 }

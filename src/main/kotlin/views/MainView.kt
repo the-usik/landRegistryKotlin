@@ -1,6 +1,12 @@
 package views
 
+import javafx.geometry.Pos
 import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.BorderPane
+import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
+import javafx.scene.shape.ArcType
+import styles.MainStyles
 import tornadofx.*
 import views.pages.AboutView
 import views.pages.AddFormView
@@ -8,13 +14,20 @@ import views.pages.GeneralView
 import views.pages.SettingsView
 
 class MainView : View("Main page") {
-    private val mainContainer by cssid()
-
     override val root = borderpane {
-        top = label(title)
-        left = createListMenu()
+        setId(MainStyles.rootContainer)
+
+        top = hbox {
+            alignment = Pos.CENTER
+            padding = insets(20.0)
+            label("Main Page")
+        }
+        left = vbox {
+            vgrow = Priority.ALWAYS
+            add(createListMenu())
+        }
         center = anchorpane {
-            setId(mainContainer)
+            setId(MainStyles.mainContent)
         }
     }
 
@@ -28,22 +41,23 @@ class MainView : View("Main page") {
     }
 
     private fun createListMenu() = listmenu {
-        item(text = "general") {
+        addClass(MainStyles.listMenu)
+        item(text = "General") {
             whenSelected { switchPage<GeneralView>() }
         }
-        item(text = "add land") {
+        item(text = "Add land") {
             whenSelected { switchPage<AddFormView>() }
         }
-        item(text = "settings") {
+        item(text = "Settings") {
             whenSelected { switchPage<SettingsView>() }
         }
-        item(text = "about") {
+        item(text = "About") {
             whenSelected { switchPage<AboutView>() }
         }
     }
 
     private inline fun <reified T : View> switchPage() {
-        root.select<AnchorPane>(mainContainer).replaceChildren {
+        root.select<AnchorPane>(MainStyles.mainContent).replaceChildren {
             add(T::class)
         }
     }

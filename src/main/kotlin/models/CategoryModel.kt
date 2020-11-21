@@ -8,7 +8,7 @@ import tornadofx.ItemViewModel
 import tornadofx.getValue
 import tornadofx.setValue
 
-class Category : DatabaseModel {
+class Category() : DatabaseModel {
     val idProperty = SimpleObjectProperty<ObjectId>()
     val nameProperty = SimpleStringProperty()
     val descriptionProperty = SimpleStringProperty()
@@ -16,6 +16,10 @@ class Category : DatabaseModel {
     var id by idProperty
     var name by nameProperty
     var description by descriptionProperty
+
+    constructor(document: Document) : this() {
+        updateModel(document)
+    }
 
     override fun toDocument(): Document {
         val document = Document()
@@ -34,13 +38,9 @@ class Category : DatabaseModel {
     }
 }
 
-class CategoryModel : ItemViewModel<Category>() {
+class CategoryModel : ItemViewModel<Category>(Category()) {
     var id = bind(Category::idProperty)
     var name = bind(Category::nameProperty)
     var description = bind(Category::descriptionProperty)
-
-    init {
-        item = Category()
-    }
 }
 

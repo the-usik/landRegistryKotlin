@@ -2,12 +2,9 @@ package views.pages
 
 import controllers.AddController
 import javafx.geometry.Pos
-import javafx.scene.layout.HBox
 import scopes.AddScope
 import tornadofx.*
-import utils.emailValidator
-import utils.nameValidator
-import utils.phoneValidator
+import helpers.*
 import java.time.LocalDate
 
 class AddFormView : View() {
@@ -19,8 +16,8 @@ class AddFormView : View() {
 
     override val root = form {
         hbox(spacing = 20) {
-            createAddOwnerForm()
-            createAddLandForm()
+            createOwnerForm("New owner", ownerModel)
+            createLandForm("New land", landModel, controller.categories)
         }
 
         hbox(spacing = 20) {
@@ -57,52 +54,4 @@ class AddFormView : View() {
         }
     }
 
-    private fun HBox.createAddOwnerForm() = fieldset(text = "New owner") {
-        field("First name: ") {
-            textfield(ownerModel.firstName).nameValidator()
-        }
-        field("Middle name: ") {
-            textfield(ownerModel.middleName).nameValidator()
-        }
-        field("Last name: ") {
-            textfield(ownerModel.lastName).nameValidator()
-        }
-        field("Full name: ") {
-            textfield(ownerModel.fullName).isDisable = true
-        }
-        field("Phone: ") {
-            textfield(ownerModel.phone).phoneValidator()
-        }
-        field("Email: ") {
-            textfield(ownerModel.email).emailValidator()
-        }
-        field("Birthday: ") {
-            datepicker(ownerModel.birthday).required()
-        }
-    }
-
-    private fun HBox.createAddLandForm() = fieldset(text = "New land") {
-        field("Category: ") {
-            combobox(values = controller.categories) {
-                cellFormat { text = it.name }
-                selectionModel.selectFirst()
-                selectionModel.selectedItemProperty().onChange {
-                    landModel.categoryId.value = it?.id
-                }
-            }
-        }
-        field("Address: ") { textfield(landModel.address).required() }
-        field("Price: ") { textfield(landModel.price).required() }
-        field("Total Area: ") { textfield(landModel.totalArea).required() }
-        field("Survey: ") {
-            togglebutton(selectFirst = false) {
-                textProperty().bind(
-                    selectedProperty().stringBinding {
-                        if (isSelected) "completed" else "not completed"
-                    }
-                )
-                selectedProperty().bindBidirectional(landModel.survey)
-            }
-        }
-    }
 }

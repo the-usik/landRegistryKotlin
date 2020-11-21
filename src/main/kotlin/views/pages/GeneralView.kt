@@ -1,11 +1,15 @@
 package views.pages
 
 import database.Database
+import events.EditPageEvent
+import events.RemoveEvent
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.layout.VBox
 import models.Land
+import styles.MainStyles
 import tornadofx.*
+import helpers.nullDecorator
 
 class GeneralView : View() {
     private val lands = Database.getLands()
@@ -17,25 +21,45 @@ class GeneralView : View() {
             item("table")
         }
 
-        vbox {
+        vbox(spacing = 20) {
             for (land in lands) {
                 landBlock(land)
             }
         }
     }
 
-    private fun VBox.landBlock(land: Land) = hbox {
-        vbox {
-            field("") {  }
+    private fun VBox.landBlock(land: Land) = hbox(spacing = 20) {
+        addClass(MainStyles.block)
+        form {
+            hbox(spacing = 20) {
+                fieldset("Land") {
+                    label("Address: ${land.address.nullDecorator()}")
+                    label("Price: ${land.price}")
+                    label("Category: ${land.category.name.nullDecorator()}")
+                    label("Survey: ${land.survey}")
+                }
+
+                fieldset("Owner") {
+                    label("First name: ${land.owner.firstName.nullDecorator()}")
+                    label("Middle name: ${land.owner.middleName.nullDecorator()}")
+                    label("Last name: ${land.owner.lastName.nullDecorator()}")
+                    label("Phone: ${land.owner.phone.nullDecorator()}")
+                    label("Email: ${land.owner.email.nullDecorator()}")
+                }
+            }
         }
 
-        vbox {
+        vbox(spacing = 10) {
             alignment = Pos.CENTER
-            button("edit")
-            button("remove")
+
+            button("edit") {
+                useMaxSize = true
+                fire(EditPageEvent)
+            }
+            button("remove") {
+                useMaxSize = true
+                fire(RemoveEvent)
+            }
         }
-        // land info
-        // owner info
-        // buttons: edit, remove
     }
 }

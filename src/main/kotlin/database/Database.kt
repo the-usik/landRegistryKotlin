@@ -25,10 +25,6 @@ object Database {
     private val client = MongoClient(DB_HOST)
     private val database = client.getDatabase(DB_NAME)
 
-    fun getDatabase() = database
-
-    fun close() = client.close()
-
     fun getUsers(): ObservableList<User> {
         val usersCollection = database.getCollection(USERS_COLLECTION)
         return usersCollection.find().asObservableModel(User::class)
@@ -36,7 +32,20 @@ object Database {
 
     fun getLands(): ObservableList<Land> {
         val landsCollection = database.getCollection(LANDS_COLLECTION)
-        return landsCollection.find().asObservableModel(Land::class)
+        val landsModelCollection = landsCollection.find().asObservableModel(Land::class)
+
+        for (land in landsModelCollection) {
+            val ownerFilter = Document("_id", land.ownerId)
+            val ownerFindResult = database.getCollection(OWNERS_COLLECTION).find(ownerFilter).first()
+
+            val categoryFilter = Document("_id", land.categoryId)
+            val categoryFindResult = database.getCollection(CATEGORIES_COLLECTION).find(categoryFilter).first()
+
+            land.owner = if (ownerFindResult != null) Owner(ownerFindResult) else Owner()
+            land.category = if (categoryFindResult != null) Category(categoryFindResult) else Category()
+        }
+
+        return landsModelCollection
     }
 
     fun getCategory(): ObservableList<Category> {
@@ -73,6 +82,7 @@ object Database {
             model.updateModel(document)
             observableList.add(model)
         }
+
         return observableList
     }
 }
