@@ -48,7 +48,7 @@ object Database {
         return landsModelCollection
     }
 
-    fun getCategory(): ObservableList<Category> {
+    fun getCategories(): ObservableList<Category> {
         val categoriesCollection = database.getCollection(CATEGORIES_COLLECTION)
         return categoriesCollection.find().asObservableModel(Category::class)
     }
