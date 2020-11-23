@@ -1,8 +1,8 @@
 package views.pages
 
 import database.Database
+import events.DeleteConfirmationEvent
 import events.EditPageEvent
-import events.RemoveEvent
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.layout.VBox
@@ -10,13 +10,17 @@ import models.Land
 import styles.MainStyles
 import tornadofx.*
 import helpers.nullDecorator
+import models.LandModel
+import scopes.Scopes
 
 class GeneralView : View() {
     private val lands = Database.getLands()
+    private val selectedLand: LandModel by inject(Scopes.landScope)
 
     override val root = vbox {
         listmenu(orientation = Orientation.HORIZONTAL) {
             alignment = Pos.CENTER
+            spacing = 10.0
             item("list")
             item("table")
         }
@@ -26,6 +30,10 @@ class GeneralView : View() {
                 landBlock(land)
             }
         }
+    }
+
+    private fun selectLand(land: Land) {
+        selectedLand.item = land
     }
 
     private fun VBox.landBlock(land: Land) = hbox(spacing = 20) {
@@ -54,11 +62,17 @@ class GeneralView : View() {
 
             button("edit") {
                 useMaxSize = true
-                fire(EditPageEvent)
+                action {
+                    selectLand(land)
+                    fire(EditPageEvent)
+                }
             }
             button("remove") {
                 useMaxSize = true
-                fire(RemoveEvent)
+                action {
+                    selectLand(land)
+                    fire(DeleteConfirmationEvent)
+                }
             }
         }
     }
