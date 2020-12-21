@@ -4,6 +4,7 @@ import com.mongodb.MongoClient
 import com.mongodb.client.FindIterable
 import com.mongodb.client.result.InsertManyResult
 import com.mongodb.client.result.InsertOneResult
+import com.mongodb.client.result.UpdateResult
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import models.*
@@ -73,6 +74,24 @@ object Database {
 
             landsCollection.insertOne(landDocument)
         } else null
+    }
+
+    fun updateLand(land: Land): UpdateResult {
+        val updatedOwnerId = updateOwner(land.owner).upsertedId
+        val landCollection = database.getCollection(LANDS_COLLECTION)
+        val filterDocument = Document()
+        val updateDocument = land.toDocument()
+        updateDocument.get("ownerId", updatedOwnerId)
+        filterDocument.append("_id", land.id)
+
+        return landCollection.updateOne(filterDocument, updateDocument)
+    }
+
+    private fun updateOwner(owner: Owner): UpdateResult {
+        val ownerCollection = database.getCollection(OWNERS_COLLECTION)
+        val filterDocument = Document().apply { append("_id", owner.id) }
+
+        return ownerCollection.updateOne(filterDocument, owner.toDocument())
     }
 
     fun insertOwner(landOwner: Owner): InsertOneResult {
