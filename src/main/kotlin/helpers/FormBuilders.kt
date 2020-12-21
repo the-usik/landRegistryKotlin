@@ -4,6 +4,7 @@ import javafx.scene.Node
 import models.Category
 import models.LandModel
 import models.OwnerModel
+import scopes.Scopes
 import tornadofx.*
 
 fun Node.createOwnerForm(title: String, ownerModel: OwnerModel) = fieldset(text = title) {
@@ -36,9 +37,16 @@ fun Node.createLandForm(title: String, landModel: LandModel, categories: List<Ca
             property = landModel.category,
             values = categories
         ) {
-            cellFormat(Scope()) { text = it.name }
-            selectionModel.selectFirst()
-        }
+            cellFormat(FX.defaultScope) {
+                text = if (it != null) it.name else "none"
+            }
+
+            selectionModel.select(
+                categories.find { category ->
+                    category.name == landModel.category.value?.name
+                }
+            )
+        }.required()
     }
     field("Address: ") { textfield(landModel.address).required() }
     field("Price: ") {

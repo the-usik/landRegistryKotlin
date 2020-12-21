@@ -1,6 +1,7 @@
 import styles.MainStyles
 import tornadofx.App
 import tornadofx.launch
+import views.AuthView
 import views.MainView
 import java.util.logging.Level
 import java.util.logging.Logger

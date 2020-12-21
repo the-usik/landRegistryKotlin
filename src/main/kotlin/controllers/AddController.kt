@@ -8,7 +8,7 @@ import models.OwnerModel
 import tornadofx.Controller
 
 class AddController : Controller() {
-    val categories = Database.getCategory()
+    val categories = Database.getCategories()
     val landModel = LandModel()
     val ownerModel = OwnerModel()
 

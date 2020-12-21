@@ -23,8 +23,8 @@ class Land() : DatabaseModel {
     val categoryProperty = SimpleObjectProperty<Category>()
     val ownerProperty = SimpleObjectProperty<Owner>()
 
-    var category by categoryProperty
-    var owner by ownerProperty
+    var category: Category by categoryProperty
+    var owner: Owner by ownerProperty
 
     var id by idProperty
     var ownerId by ownerIdProperty
@@ -71,8 +71,6 @@ class Land() : DatabaseModel {
 
 class LandModel : ItemViewModel<Land>(Land()) {
     var id = bind(Land::idProperty)
-    var ownerId = bind(Land::ownerIdProperty)
-    var categoryId = bind(Land::categoryIdProperty)
     var address = bind(Land::addressProperty)
     var price = bind(Land::priceProperty)
     var totalArea = bind(Land::totalAreaProperty)

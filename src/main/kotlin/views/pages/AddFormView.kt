@@ -1,20 +1,27 @@
 package views.pages
 
-import controllers.AddController
+import controllers.LandController
+import database.Database
 import javafx.geometry.Pos
-import scopes.AddScope
 import tornadofx.*
 import helpers.*
+import models.Land
+import models.LandModel
+import models.Owner
+import models.OwnerModel
+import scopes.Scopes
+import styles.MainStyles
 import java.time.LocalDate
 
 class AddFormView : View() {
-    override val scope = AddScope()
+    override val scope = Scopes.addScope
 
-    private val controller: AddController by inject(scope)
-    private val landModel = controller.landModel
-    private val ownerModel = controller.ownerModel
+    private val controller: LandController by inject()
+    private val landModel = LandModel()
+    private val ownerModel = OwnerModel().also { it.itemProperty.bind(landModel.owner) }
 
     override val root = form {
+        addClass(MainStyles.block)
         hbox(spacing = 20) {
             createOwnerForm("New owner", ownerModel)
             createLandForm("New land", landModel, controller.categories)
@@ -29,18 +36,13 @@ class AddFormView : View() {
                 enableWhen(ownerModel.valid.and(landModel.valid))
                 action {
                     runAsync {
-                        controller.submitForm()
-                    } success {
-                        println("good")
-                    } fail {
-                        println("fail")
-                    } finally { controller.clearForm() }
+                        submitForm()
+                    }
                 }
             }
 
             button("auto-fill") {
                 minWidth = 200.0
-
                 action {
                     val owner = ownerModel.item!!
                     owner.firstName = "Jack"
@@ -54,4 +56,18 @@ class AddFormView : View() {
         }
     }
 
+    private fun submitForm() {
+        if (ownerModel.commit() && landModel.commit()) {
+            val result = controller.addLand(landModel.item)
+            if (result) {
+                println("success")
+                clearForm()
+            } else println("error")
+        }
+    }
+
+    private fun clearForm() {
+        ownerModel.item = Owner()
+        landModel.item = Land()
+    }
 }

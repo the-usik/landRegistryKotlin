@@ -16,13 +16,24 @@ import scopes.Scopes
 class GeneralView : View() {
     private val lands = Database.getLands()
     private val selectedLand: LandModel by inject(Scopes.landScope)
+    private val viewContainer by cssid()
 
     override val root = vbox {
         listmenu(orientation = Orientation.HORIZONTAL) {
             alignment = Pos.CENTER
             spacing = 10.0
-            item("list")
+            item("list") {
+                whenSelected { }
+            }
             item("table")
+
+        }
+
+        vbox {
+            setId(viewContainer)
+            // list view
+            // table view
+            
         }
 
         vbox(spacing = 20) {
@@ -31,6 +42,7 @@ class GeneralView : View() {
             }
         }
     }
+
 
     private fun selectLand(land: Land) {
         selectedLand.item = land

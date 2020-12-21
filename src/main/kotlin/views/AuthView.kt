@@ -1,7 +1,9 @@
 package views
 
 import database.Database
+import javafx.geometry.Pos
 import javafx.scene.control.Label
+import javafx.scene.paint.Color
 import javafx.util.Duration
 import models.UserModel
 import tornadofx.*
@@ -10,22 +12,39 @@ class AuthView : View("Authorization") {
     private val userModel: UserModel by inject()
     private val messageLabelId by cssid()
 
-    override val root = form {
-        fieldset("Authorization") {
-            field("Login: ") { textfield(userModel.login).required() }
-            field("Password: ") { passwordfield(userModel.password).required() }
-
-            label {
-                setId(messageLabelId)
-                isVisible = false
+    override val root = borderpane {
+        top = hbox {
+            alignment = Pos.CENTER
+            padding = insets(10.0)
+            label("Authorization") {
+                textFill = c("#fff")
             }
         }
 
-        button("auth") {
-            enableWhen(userModel.valid)
-            useMaxWidth = true
-            action { authUser() }
+        center {
+            form {
+                fieldset {
+                    field("Login: ") { textfield(userModel.login).required() }
+                    field("Password: ") { passwordfield(userModel.password).required() }
+
+                    label {
+                        setId(messageLabelId)
+                        isVisible = false
+                    }
+                }
+
+                button("auth") {
+                    enableWhen(userModel.valid)
+                    useMaxWidth = true
+                    action { authUser() }
+                }
+            }
         }
+    }
+
+    init {
+        currentStage?.minWidth = 250.0
+        currentStage?.minHeight = 300.0
     }
 
     private fun authUser() {

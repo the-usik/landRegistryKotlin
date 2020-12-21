@@ -1,5 +1,6 @@
 package styles
 
+import javafx.geometry.HPos
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.effect.DropShadow
@@ -75,7 +76,7 @@ class MainStyles : Stylesheet() {
         }
 
         mainContent {
-//            +commonBlock
+            textFill = c("#fff")
         }
 
     }

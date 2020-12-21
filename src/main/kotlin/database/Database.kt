@@ -2,6 +2,7 @@ package database
 
 import com.mongodb.MongoClient
 import com.mongodb.client.FindIterable
+import com.mongodb.client.result.InsertManyResult
 import com.mongodb.client.result.InsertOneResult
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -61,18 +62,24 @@ object Database {
         return usersCollection.find(document).count() > 0
     }
 
+    fun insertLand(land: Land): InsertOneResult? {
+        val ownerInsertId = insertOwner(land.owner).insertedId
+        return if (ownerInsertId != null) {
+            val ownerObjectId = ownerInsertId.asObjectId().value
+            land.owner.id = ownerObjectId
+
+            val landsCollection = database.getCollection(LANDS_COLLECTION)
+            val landDocument = land.toDocument()
+
+            landsCollection.insertOne(landDocument)
+        } else null
+    }
+
     fun insertOwner(landOwner: Owner): InsertOneResult {
         val ownerCollection = database.getCollection(OWNERS_COLLECTION)
         val ownerDocument = landOwner.toDocument()
 
         return ownerCollection.insertOne(ownerDocument)
-    }
-
-    fun insertLand(land: Land): InsertOneResult {
-        val landsCollection = database.getCollection(LANDS_COLLECTION)
-        val landDocument = land.toDocument()
-
-        return landsCollection.insertOne(landDocument)
     }
 
     private fun <T : DatabaseModel> FindIterable<Document>.asObservableModel(modelClass: KClass<T>): ObservableList<T> {
