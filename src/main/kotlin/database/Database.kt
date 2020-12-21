@@ -81,7 +81,7 @@ object Database {
         val landCollection = database.getCollection(LANDS_COLLECTION)
         val filterDocument = Document()
         val updateDocument = land.toDocument()
-        updateDocument.get("ownerId", updatedOwnerId)
+        updateDocument["ownerId"] = updatedOwnerId
         filterDocument.append("_id", land.id)
 
         return landCollection.updateOne(filterDocument, updateDocument)
